@@ -5,9 +5,8 @@
     <url>http://maven.apache.org</url>
     <version>0.0.1</version>
     <dependencies>
-        <!--
-        https://mvnrepository.com/artifact/org.scalatest/scalatest
-       -->
+
+        <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.12</artifactId>
@@ -75,8 +74,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.28</version>
         </dependency>
-
-
 
     </dependencies>
 </project>

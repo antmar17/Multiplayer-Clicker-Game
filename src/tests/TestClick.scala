@@ -37,14 +37,93 @@ class TestClick extends TestKit(ActorSystem("TestGame"))
 
       expectNoMessage(200.millis)
 
-      gameActor ! Update
-      val state: GameState = expectMsgType[GameState](1000.millis)
 
-      val jsonState = state.gameState
-      val gameState: JsValue = Json.parse(jsonState)
-      val gold = (gameState \ "currency").as[Double]
+      gameActor ! Update
+      var state: GameState = expectMsgType[GameState](1000.millis)
+
+      var jsonState = state.gameState
+      var gameState: JsValue = Json.parse(jsonState)
+      println(gameState)
+      var gold = (gameState \ "currency").as[Double]
       val expectedGold = 1.0
       assert(equalDoubles(gold, expectedGold))
+
+      //test Buy Equipment get 10 gold to buy shovel
+      //-----------------------------------------------------------------
+      for(i<- 0 until 9){
+        gameActor ! Click
+
+        expectNoMessage(200.millis)
+
+      }
+      gameActor ! Update
+
+
+      state= expectMsgType[GameState](1000.millis)
+      jsonState = state.gameState
+      gameState = Json.parse(jsonState)
+      gold = (gameState \ "currency").as[Double]
+      assert(equalDoubles(gold, 10))
+
+
+      //use 10 gold to get shovel
+      gameActor ! BuyEquipment("shovel")
+
+      expectNoMessage(200.millis)
+
+      gameActor ! Click
+      expectNoMessage(200.millis)
+
+
+      gameActor!Update
+      state= expectMsgType[GameState](1000.millis)
+      jsonState = state.gameState
+      gameState = Json.parse(jsonState)
+      gold = (gameState \ "currency").as[Double]
+      println(gold)
+      assert(equalDoubles(gold, 2))
+
+//-----------------------------------------------------------------
+
+
+
+
+
+
+ //Test buying Excator as well as gold per second
+//-----------------------------------------------------------------
+      println("long loop begin")
+
+      for(i<- 0 until 200){
+        gameActor ! Click
+
+        expectNoMessage(200.millis)
+        gameActor !Update
+        state= expectMsgType[GameState](1000.millis)
+
+
+      }
+      println("long loop OVA")
+
+
+
+      gameActor ! BuyEquipment("excavator")
+
+      expectNoMessage(200.millis)
+      gameActor!Update
+      state= expectMsgType[GameState](1000.millis)
+      jsonState = state.gameState
+      gameState = Json.parse(jsonState)
+      gold = (gameState \ "currency").as[Double]
+      println(gold)
+
+
+
+
+
+
+
+
 
     }
   }
